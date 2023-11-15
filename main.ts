@@ -8,11 +8,13 @@ namespace ESP8266Smarteo {
     function resetESP() {
         sendAT("AT+RESTORE", 1000) // restore to factory settings
         sendAT("AT+RST", 1000) // reset the module
-        let response = serial.readString()
-        console.log(response)
         sendAT("AT+CWMODE=1", 500) // set to station mode
-        basic.showNumber(1)
-        basic.pause(3000)
+    }
+
+    function isConnectedWiFi() : boolean {
+        sendAT("AT+CWJAP?", 5000)
+        let response = serial.readString()
+        return response.includes("NO AP") == false
     }
     
     /**
@@ -22,18 +24,18 @@ namespace ESP8266Smarteo {
     //% tx.defl='SerialPin.P14'
     //% rx.defl='SerialPin.P0'
     //% baudrate.defl='baudrate.BaudRate115200'
-    export function initesp8266(tx : SerialPin, rx : SerialPin, baudrate : BaudRate): boolean {
+    export function initesp8266(tx : SerialPin, rx : SerialPin, baudrate : BaudRate) {
         try {
             serial.redirect(tx, rx, BaudRate.BaudRate115200)
+            basic.pause(100)
             serial.setTxBufferSize(128)
             serial.setRxBufferSize(128)
             resetESP()
-            return true
         }
         catch(e) {
-            basic.showString("Erreur lors de l'initialisation des pins: " + e)
-            return false
+            basic.showString("Erreur pins :" + e)
         }
+            
     }
 
     /**
@@ -43,14 +45,13 @@ namespace ESP8266Smarteo {
     //% ssid.defl='Smarteo'
     //% password.defl='%Smarteo123'
     //% ip_address.defl='192.168.1.30'
-    export function connectesp8266(ssid : string, password : string, ip_address : string) {
-        sendAT(`AT+CWJAP="${ssid}","${password}"`)
-        let response2 = serial.readString()
-        console.log(response2)
-        basic.showNumber(2)
-        basic.pause(2000)
+    export function connectToWifi(ssid : string, password : string, ip_address : string) : boolean {
+        sendAT(`AT+CWJAP="${ssid}","${password}"`, 5000)
+        if(!isConnectedWiFi()) {
+            basic.showString("echec du connexion wifi")
+            return false
+        }
         sendAT(`AT+CIPSTA="${ip_address}"`, 1000)
-        basic.showNumber(3)
-        basic.pause(2000)
+        return true
     }
  }
