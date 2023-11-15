@@ -17,10 +17,10 @@ namespace ESP8266Smarteo {
     /**
      * Initialize ESP8266 module
      */
-    //% block="set ESP8266 RX %rx TX %tx Baudrate %baudrate"
-    //% tx.defl=SerialPin.P14
-    //% rx.defl=SerialPin.P0
-    //% baudrate.defl=baudrate.BaudRate115200
+    //% block='set ESP8266 RX %rx TX %tx Baudrate %baudrate'
+    //% tx.defl='SerialPin.P14'
+    //% rx.defl='SerialPin.P0'
+    //% baudrate.defl='baudrate.BaudRate115200'
     export function initesp8266(tx : SerialPin, rx : SerialPin, baudrate : BaudRate) {
         serial.redirect(tx, rx, BaudRate.BaudRate115200)
         basic.pause(100)
@@ -32,10 +32,10 @@ namespace ESP8266Smarteo {
     /**
      * Connect to Wifi router
      */
-    //% block="Connect Wifi SSID %ssid password %password"
-    //% ssid.defl=Smarteo
-    //% password.defl=%Smarteo123
-    //% ip_address.defl=192.168.1.30
+    //% block='Connect Wifi SSID %ssid password %password'
+    //% ssid.defl='Smarteo'
+    //% password.defl='%Smarteo123'
+    //% ip_address.defl='192.168.1.30'
     export function connectesp8266(ssid : string, password : string, ip_address : string) {
         sendAT(`AT+CWJAP="${ssid}","${password}"`)
         let response2 = serial.readString()
