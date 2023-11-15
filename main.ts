@@ -22,13 +22,18 @@ namespace ESP8266Smarteo {
     //% tx.defl='SerialPin.P14'
     //% rx.defl='SerialPin.P0'
     //% baudrate.defl='baudrate.BaudRate115200'
-    export function initesp8266(tx : SerialPin, rx : SerialPin, baudrate : BaudRate) {
-        serial.redirect(tx, rx, BaudRate.BaudRate115200)
-        basic.showNumber(0)
-        basic.pause(100)
-        serial.setTxBufferSize(128)
-        serial.setRxBufferSize(128)
-        resetESP()
+    export function initesp8266(tx : SerialPin, rx : SerialPin, baudrate : BaudRate): boolean {
+        try {
+            serial.redirect(tx, rx, BaudRate.BaudRate115200)
+            serial.setTxBufferSize(128)
+            serial.setRxBufferSize(128)
+            resetESP()
+            return true
+        }
+        catch(e) {
+            basic.showString("Erreur lors de l'initialisation des pins: " + e)
+            return false
+        }
     }
 
     /**
