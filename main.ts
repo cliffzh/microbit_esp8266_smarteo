@@ -9,20 +9,20 @@ namespace ESP8266Smarteo {
         let response = ""
         do {
 
-            sendAT("AT+RESTORE", 1000); // restore to factory settings
-            sendAT("AT+RST", 1000); // reset the module
-            sendAT("AT", 500); // test command
-            response = serial.readString();
+            sendAT("AT+RESTORE", 1000) // restore to factory settings
+            sendAT("AT+RST", 1000) // reset the module
+            sendAT("AT", 500) // test command
+            response = serial.readString()
             if (response.includes("OK")) {
-                basic.showIcon(IconNames.Yes);
-                break; // Sortir de la boucle si la réponse est OK
+                basic.showIcon(IconNames.Yes)
+                break // Sortir de la boucle si la réponse est OK
             } else {
-                basic.showIcon(IconNames.No);
-                basic.pause(1000); // Attendre avant de réessayer
+                basic.showIcon(IconNames.No)
+                basic.pause(1000) // Attendre avant de réessayer
             }
-        } while (true); // Boucle infinie jusqu'à ce que la condition soit remplie
+        } while (true) // Boucle infinie jusqu'à ce que la condition soit remplie
 
-        sendAT("AT+CWMODE=1", 500); // set to station mode
+        sendAT("AT+CWMODE=1", 500) // set to station mode
     }
     
     /**
@@ -59,7 +59,7 @@ namespace ESP8266Smarteo {
         }
     }
 
-    export function WifiStrength() {
+    export function wifistrength() {
         sendAT("AT+RSSI", 1000)
         let response = serial.readString()
         basic.showString(response)
