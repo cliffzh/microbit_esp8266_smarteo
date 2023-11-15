@@ -11,6 +11,7 @@ namespace ESP8266Smarteo {
         let response = serial.readString()
         console.log(response)
         sendAT("AT+CWMODE=1", 500) // set to station mode
+        basic.showNumber(1)
         basic.pause(3000)
     }
     
@@ -23,6 +24,7 @@ namespace ESP8266Smarteo {
     //% baudrate.defl='baudrate.BaudRate115200'
     export function initesp8266(tx : SerialPin, rx : SerialPin, baudrate : BaudRate) {
         serial.redirect(tx, rx, BaudRate.BaudRate115200)
+        basic.showNumber(0)
         basic.pause(100)
         serial.setTxBufferSize(128)
         serial.setRxBufferSize(128)
@@ -40,6 +42,10 @@ namespace ESP8266Smarteo {
         sendAT(`AT+CWJAP="${ssid}","${password}"`)
         let response2 = serial.readString()
         console.log(response2)
+        basic.showNumber(2)
+        basic.pause(2000)
         sendAT(`AT+CIPSTA="${ip_address}"`, 1000)
+        basic.showNumber(3)
+        basic.pause(2000)
     }
  }
