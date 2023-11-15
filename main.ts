@@ -32,7 +32,7 @@ namespace ESP8266Smarteo {
     /**
      * Connect to Wifi router
      */
-    //% block='Connect Wifi SSID %ssid password %password'
+    //% block='Connect Wifi SSID %ssid password %password ip address %ip_address'
     //% ssid.defl='Smarteo'
     //% password.defl='%Smarteo123'
     //% ip_address.defl='192.168.1.30'
