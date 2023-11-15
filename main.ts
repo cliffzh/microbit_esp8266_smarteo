@@ -6,19 +6,23 @@ namespace ESP8266Smarteo {
     }
 
     function resetESP() {
-        sendAT("AT+RESTORE", 1000) // restore to factory settings
-        sendAT("AT+RST", 1000) // reset the module
-        sendAT("AT",500)
-        let response = serial.readString()
-        if (response.includes("OK")) {
-            basic.showIcon(IconNames.Yes)
-            basic.pause(5000)
-        }
-        else {
-            basic.showIcon(IconNames.No)
-            basic.pause(5000)
-        }
-        sendAT("AT+CWMODE=1", 500) // set to station mode
+        let response = ""
+        do {
+
+            sendAT("AT+RESTORE", 1000); // restore to factory settings
+            sendAT("AT+RST", 1000); // reset the module
+            sendAT("AT", 500); // test command
+            response = serial.readString();
+            if (response.includes("OK")) {
+                basic.showIcon(IconNames.Yes);
+                break; // Sortir de la boucle si la réponse est OK
+            } else {
+                basic.showIcon(IconNames.No);
+                basic.pause(1000); // Attendre avant de réessayer
+            }
+        } while (true); // Boucle infinie jusqu'à ce que la condition soit remplie
+
+        sendAT("AT+CWMODE=1", 500); // set to station mode
     }
     
     /**
@@ -47,11 +51,19 @@ namespace ESP8266Smarteo {
         sendAT(`AT+CWJAP="${ssid}","${password}"`, 5000)
         sendAT("AT+CWJAP?",5000)
         let response = serial.readString()
-        if (response.includes("NO AP") == false) {
-            basic.showIcon(IconNames.Happy)
-        }
-        else {
+        if (response.includes("NO AP")) {
             basic.showIcon(IconNames.Angry)
         }
+        else {
+            basic.showIcon(IconNames.Happy)
+        }
     }
+
+    export function WifiStrength() {
+        sendAT("AT+RSSI", 1000)
+        let response = serial.readString()
+        basic.showString(response)
+    }
+
+
  }
