@@ -59,11 +59,12 @@ namespace ESP8266Smarteo {
         }
     }
 
+    /**
+     * Check the strength of the signal wifi
+     */
     export function wifistrength() {
         sendAT("AT+RSSI", 1000)
         let response = serial.readString()
         basic.showString(response)
     }
-
-
  }
