@@ -43,8 +43,7 @@ namespace ESP8266Smarteo {
             else {
                 basic.showIcon(IconNames.No)
                 basic.pause(1000)
-            } 
-        resetESP()
+            }
     }
     
 
