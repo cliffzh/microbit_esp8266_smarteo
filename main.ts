@@ -60,8 +60,8 @@ namespace ESP8266Smarteo {
     //% ip_address.defl='192.168.1.30'
     export function connectToWifi(ssid : string, password : string, ip_address : string) {
         sendAT("AT+CWJAP=\"" + ssid + "\",\"" + password + "\"", 0)
-        let response = serial.readString()
-        if (response.includes("OK")) {
+        let response2 = serial.readString()
+        if (response2.includes("OK")) {
             basic.showIcon(IconNames.Happy)
             basic.pause(3000)
             sendAT("AT+CIPSTA=\"" + ip_address + "\"", 0)
@@ -75,7 +75,7 @@ namespace ESP8266Smarteo {
                 basic.pause(2000)
             }
         }
-        else if (response.includes("ERROR")) {
+        else if (response2.includes("ERROR")) {
             basic.showIcon(IconNames.Angry)
             basic.pause(2000)
         }
@@ -85,8 +85,9 @@ namespace ESP8266Smarteo {
      */
     //% block='Connect tcp serveur %serverIP'
     //% serverIP.defl='127.0.0.1'
-    export function connectAndSendTCP (serverIP : string) {
-        sendAT("AT+CIPSTART=\"TCP\",\""+ serverIP + "\",8080" + "\"", 0)
+    //% port.defl='8080
+    export function connectAndSendTCP (serverIP : string, port : number) {
+        sendAT("AT+CIPSTART=\"TCP\",\"" + serverIP + "\"," + port, 5000);
         let connectResponse = serial.readString()
         if (connectResponse.includes("OK")) {
             basic.showIcon(IconNames.Heart)
