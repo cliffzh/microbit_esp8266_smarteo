@@ -83,7 +83,7 @@ namespace ESP8266Smarteo {
     /**
      * Connect to a tcp server
      */
-    //% block='Connect tcp serveur %serverIP'
+    //% block='Connect tcp serveur %serverIP and port %port'
     //% serverIP.defl='127.0.0.1'
     //% port.defl='8080
     export function connectAndSendTCP (serverIP : string, port : number) {
