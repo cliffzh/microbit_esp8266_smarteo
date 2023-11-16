@@ -34,16 +34,18 @@ namespace ESP8266Smarteo {
             serial.redirect(tx, rx, BaudRate.BaudRate115200)
             serial.setTxBufferSize(128)
             serial.setRxBufferSize(128)
-            sendAT("AT", 500)
-            let test = serial.readString()
-            if (test.includes("OK")) {
-                basic.showIcon(IconNames.Yes)
-                basic.pause(1000)
-            }
-            else {
-                basic.showIcon(IconNames.No)
-                basic.pause(1000)
-            }
+            do {
+                sendAT("AT", 500)
+                let test = serial.readString()
+                if (test.includes("OK")) {
+                    basic.showIcon(IconNames.Yes)
+                    basic.pause(1000)
+                }
+                else {
+                    basic.showIcon(IconNames.No)
+                    basic.pause(1000)
+                }
+            } while (true)
     }
     
 
