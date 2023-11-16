@@ -75,7 +75,7 @@ namespace ESP8266Smarteo {
                 basic.pause(2000)
             }
         }
-        else {
+        else if (response.includes("ERROR")) {
             basic.showIcon(IconNames.Angry)
             basic.pause(2000)
         }
