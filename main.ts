@@ -86,7 +86,7 @@ namespace ESP8266Smarteo {
     //% block='Connect tcp serveur %serverIP'
     //% serverIP.defl='127.0.0.1'
     export function connectAndSendTCP (serverIP : string) {
-        sendAT("AT+CIPSTART=\"TCP\",\""+ serverIP + "\",8080", 0)
+        sendAT("AT+CIPSTART=\"TCP\",\""+ serverIP + "\",8080" + "\"", 0)
         let connectResponse = serial.readString()
         if (connectResponse.includes("OK")) {
             basic.showIcon(IconNames.Heart)
