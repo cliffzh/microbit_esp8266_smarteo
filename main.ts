@@ -6,18 +6,18 @@ namespace ESP8266Smarteo {
     }
 
     function resetESP() {
-        let response = ""
+        sendAT("AT+RESTORE", 1000) // restore to factory settings
+        sendAT("AT+RST", 1000) // reset the module
         do {
-            sendAT("AT+RESTORE", 1000) // restore to factory settings
-            sendAT("AT+RST", 1000) // reset the module
             sendAT("AT", 500) // test command
-            response = serial.readString()
+            let response = serial.readString()
             if (response.includes("OK")) {
                 basic.showIcon(IconNames.Yes)
+                basic.pause(2000)
                 break // Sortir de la boucle si la réponse est OK
             } else {
                 basic.showIcon(IconNames.No)
-                basic.pause(1000) // Attendre avant de réessayer
+                basic.pause(2000) // Attendre avant de réessayer
             }
         } while (true) // Boucle infinie jusqu'à ce que la condition soit remplie
         sendAT("AT+CWMODE=1", 500) // set to station mode
@@ -38,14 +38,16 @@ namespace ESP8266Smarteo {
                 sendAT("AT", 500)
                 let test = serial.readString()
                 if (test.includes("OK")) {
-                    basic.showIcon(IconNames.Yes)
-                    basic.pause(1000)
+                    basic.showIcon(IconNames.Duck)
+                    basic.pause(2000)
+                    break
                 }
                 else {
-                    basic.showIcon(IconNames.No)
-                    basic.pause(1000)
+                    basic.showIcon(IconNames.Snake)
+                    basic.pause(2000)
                 }
             } while (true)
+            resetESP()
     }
     
 
@@ -57,15 +59,26 @@ namespace ESP8266Smarteo {
     //% password.defl='%Smarteo123'
     //% ip_address.defl='192.168.1.30'
     export function connectToWifi(ssid : string, password : string, ip_address : string) {
-        sendAT(`AT+CWJAP="${ssid}","${password}"`, 5000)
-        sendAT("AT+CWJAP?",5000)
+        sendAT("AT+CWJAP=\"" + ssid + "\",\"" + password + "\"", 0)
+        sendAT("AT+CWJAP?",500)
         let response = serial.readString()
-        if (response.includes("NO AP")) {
-            basic.showIcon(IconNames.Angry)
+        if (response.includes("OK")) {
+            basic.showIcon(IconNames.Happy)
+            basic.pause(3000)
+            sendAT("AT+CIPSTA=\"" + ip_address + "\"", 0)
+            let responseip = serial.readString()
+            if (responseip.includes("OK")) {
+                basic.showIcon(IconNames.Surprised)
+                basic.pause(2000)
+            } 
+            else {
+                basic.showIcon(IconNames.Silly)
+                basic.pause(2000)
+            }
         }
         else {
-            basic.showIcon(IconNames.Happy)
+            basic.showIcon(IconNames.Angry)
+            basic.pause(2000)
         }
     }
-
 }
