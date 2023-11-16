@@ -28,7 +28,7 @@ namespace ESP8266Smarteo {
     /**
      * Initialize ESP8266 module
      */
-    //% block='set ESP8266 RX %rx TX %tx Baudrate %baudrate'
+    //% block='set ESP8266 Tx %tx Rx %rx Baudrate %baudrate'
     //% tx.defl='SerialPin.P14'
     //% rx.defl='SerialPin.P0'
     //% baudrate.defl='baudrate.BaudRate115200'
