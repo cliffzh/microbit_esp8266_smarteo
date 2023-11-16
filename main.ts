@@ -60,7 +60,6 @@ namespace ESP8266Smarteo {
     //% ip_address.defl='192.168.1.30'
     export function connectToWifi(ssid : string, password : string, ip_address : string) {
         sendAT("AT+CWJAP=\"" + ssid + "\",\"" + password + "\"", 0)
-        sendAT("AT+CWJAP?",500)
         let response = serial.readString()
         if (response.includes("OK")) {
             basic.showIcon(IconNames.Happy)
