@@ -20,7 +20,7 @@ namespace ESP8266Smarteo {
                 basic.pause(2000) // Attendre avant de réessayer
             }
         } while (true) // Boucle infinie jusqu'à ce que la condition soit remplie
-        sendAT("AT+CWMODE=1", 500) // set to station mode
+        sendAT("AT+CWMODE=1") // set to station mode
     }
     
     /**
@@ -78,6 +78,22 @@ namespace ESP8266Smarteo {
         else if (response.includes("ERROR")) {
             basic.showIcon(IconNames.Angry)
             basic.pause(2000)
+        }
+    }
+    /**
+     * Connect to a tcp server
+     */
+    //% block='Connect tcp serveur %serverIP'
+    //% serverIP.defl='127.0.0.1
+    export function connectAndSendTCP (serverIP : string) {
+        sendAT("AT+CIPSTART=\"TCP\",\""+ serverIP + "\",8080", 0)
+        let connectResponse = serial.readString()
+        if (connectResponse.includes("OK")) {
+            basic.showIcon(IconNames.Heart)
+        }
+        else {
+            basic.showIcon(IconNames.Sad)
+            return
         }
     }
 }
