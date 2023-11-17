@@ -111,4 +111,12 @@ namespace ESP8266Smarteo {
             sendAT(data, 1000)
         })
     }
+
+    /**
+     * Close TCP connection
+     */
+    //% block
+    export function closeTCPConnection() {
+        sendAT("AT+CIPCLOSE", 1000);
+    }
 }
