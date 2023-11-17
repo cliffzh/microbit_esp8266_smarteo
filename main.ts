@@ -5,6 +5,16 @@ namespace ESP8266Smarteo {
         basic.pause(wait)
     }
 
+    function handleCommand(commands : string) {
+        if (commands.includes("allumer_led")) {
+            basic.clearScreen()
+            basic.showIcon(IconNames.Square)
+        }
+        else if (commands.includes("eteindre_led")) {
+            basic.clearScreen()
+        }
+    }
+
     function resetESP() {
         sendAT("AT+RESTORE", 1000) // restore to factory settings
         sendAT("AT+RST", 1000) // reset the module
@@ -86,7 +96,7 @@ namespace ESP8266Smarteo {
     //% block='Connect tcp serveur %serverIP and port %port'
     //% serverIP.defl='127.0.0.1'
     //% port.defl='8080'
-    export function connectAndSendTCP (serverIP : string, port : string) {
+    export function connectTCPServer (serverIP : string, port : string) {
         sendAT("AT+CIPSTART=\"TCP\",\"" + serverIP + "\"," + port, 5000);
         let connectResponse = serial.readString()
         if (connectResponse.includes("OK")) {
@@ -118,5 +128,19 @@ namespace ESP8266Smarteo {
     //% block
     export function closeTCPConnection() {
         sendAT("AT+CIPCLOSE", 1000);
+    }
+
+    /**
+     * Listen for commands 
+     */
+    //% block
+    export function listenMatrix() {
+        while (true) {
+            let response = serial.readString()
+            if(response) {
+                handleCommand(response)
+            }
+            basic.pause(100)
+        }
     }
 }
