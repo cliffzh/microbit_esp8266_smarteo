@@ -104,7 +104,7 @@ namespace ESP8266Smarteo {
     //% block='Send data %data on button %button'
     //% data.defl='Hello, World !'
     //% button.defl='Button.A'
-    export function sendDataOnButtonPress (button : Button, data : string) {
+    export function sendDataOnButtonPress (data : string, button : Button) {
         input.onButtonPressed(button, function() {
             let datalength = data.length
             sendAT("AT+CIPSEND=" + datalength)
