@@ -136,9 +136,9 @@ namespace ESP8266Smarteo {
     //% block
     export function listenMatrix() {
         while (true) {
-            let response = serial.readString()
-            if(response) {
-                handleCommand(response)
+            let response3 = serial.readString()
+            if(response3) {
+                handleCommand(response3)
             }
             basic.pause(100)
         }
