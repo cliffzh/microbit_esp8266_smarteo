@@ -105,8 +105,10 @@ namespace ESP8266Smarteo {
             let identificationMessage = "IDENTIFY: Microbit"
             let messageLength = identificationMessage.length
 
-            sendAT("AT+CIPSEND" + messageLength, 1000)
-            sendAT(identificationMessage, 1000)
+            sendAT("AT+CIPSEND=" + messageLength, 1000)
+            if (serial.readString().includes(">")) {
+                sendAT(identificationMessage, 1000)
+            }
         }
         else {
             basic.showIcon(IconNames.Sad)
