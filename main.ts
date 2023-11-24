@@ -123,7 +123,7 @@ namespace ESP8266Smarteo {
     export function sendDataOnButtonPress (data : string, button : Button) {
         input.onButtonPressed(button, function() {
             sendAT("AT+CIPSEND=" + data.length)
-            sendAT(data, 1000)
+            sendAT(data)
         })
     }
 
