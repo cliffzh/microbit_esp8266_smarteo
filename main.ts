@@ -13,6 +13,9 @@ namespace ESP8266Smarteo {
         else if (commands.includes("eteindre_led")) {
             basic.clearScreen()
         }
+        else if (commands.includes("fermer")) {
+            sendAT("AT+CIPCLOSE", 1000)
+        }
     }
 
     function resetESP() {
@@ -107,7 +110,7 @@ namespace ESP8266Smarteo {
 
             sendAT("AT+CIPSEND=" + messageLength, 1000)
             if (serial.readString().includes(">")) {
-                sendAT(identificationMessage, 1000)
+                sendAT(identificationMessage)
             }
         }
         else if (connectResponse.includes("ERROR")) {
@@ -127,7 +130,7 @@ namespace ESP8266Smarteo {
             let datalength = data.length
             sendAT("AT+CIPSEND=" + datalength, 1000)
             if (serial.readString().includes(">")) {
-                sendAT(data, 1000)
+                sendAT(data)
             }
         })
     }
@@ -137,7 +140,7 @@ namespace ESP8266Smarteo {
      */
     //% block
     export function closeTCPConnection() {
-        sendAT("AT+CIPCLOSE", 1000);
+        sendAT("AT+CIPCLOSE", 1000)
     }
 
     /**
