@@ -14,21 +14,23 @@ namespace ESP8266Smarteo {
             basic.clearScreen()
         }
         else if (commands.includes("fermer")) {
-            sendAT("AT+CIPCLOSE")
+            sendAT("AT+CIPCLOSE", 1000)
         }
     }
 
     function resetESP() {
-        sendAT("AT+RESTORE") // restore to factory settings
-        sendAT("AT+RST") // reset the module
+        sendAT("AT+RESTORE", 1000) // restore to factory settings
+        sendAT("AT+RST", 1000) // reset the module
         do {
-            sendAT("AT") // test command
+            sendAT("AT", 500) // test command
             let response = serial.readString()
             if (response.includes("OK")) {
                 basic.showIcon(IconNames.Yes)
+                basic.pause(2000)
                 break // Sortir de la boucle si la réponse est OK
             } else {
                 basic.showIcon(IconNames.No)
+                basic.pause(2000) // Attendre avant de réessayer
             }
         } while (true) // Boucle infinie jusqu'à ce que la condition soit remplie
         sendAT("AT+CWMODE=1") // set to station mode
@@ -46,14 +48,16 @@ namespace ESP8266Smarteo {
             serial.setTxBufferSize(128)
             serial.setRxBufferSize(128)
             do {
-                sendAT("AT")
+                sendAT("AT", 500)
                 let test = serial.readString()
                 if (test.includes("OK")) {
                     basic.showIcon(IconNames.Duck)
+                    basic.pause(2000)
                     break
                 }
                 else {
                     basic.showIcon(IconNames.Snake)
+                    basic.pause(2000)
                 }
             } while (true)
             resetESP()
@@ -72,17 +76,21 @@ namespace ESP8266Smarteo {
         let response2 = serial.readString()
         if (response2.includes("OK")) {
             basic.showIcon(IconNames.Happy)
+            basic.pause(3000)
             sendAT("AT+CIPSTA=\"" + ip_address + "\"", 0)
             let responseip = serial.readString()
             if (responseip.includes("OK")) {
                 basic.showIcon(IconNames.Surprised)
+                basic.pause(2000)
             } 
             else {
                 basic.showIcon(IconNames.Silly)
+                basic.pause(2000)
             }
         }
         else if (response2.includes("ERROR")) {
             basic.showIcon(IconNames.Angry)
+            basic.pause(2000)
         }
     }
     /**
@@ -92,7 +100,7 @@ namespace ESP8266Smarteo {
     //% serverIP.defl='127.0.0.1'
     //% port.defl='8080'
     export function connectTCPServer (serverIP : string, port : string) {
-        sendAT("AT+CIPSTART=\"TCP\",\"" + serverIP + "\"," + port);
+        sendAT("AT+CIPSTART=\"TCP\",\"" + serverIP + "\"," + port, 5000);
         let connectResponse = serial.readString()
         if (connectResponse.includes("OK")) {
             basic.showIcon(IconNames.Heart)
@@ -115,7 +123,7 @@ namespace ESP8266Smarteo {
     export function sendDataOnButtonPress (data : string, button : Button) {
         input.onButtonPressed(button, function() {
             sendAT("AT+CIPSEND=" + data.length)
-            sendAT(data)
+            sendAT(data, 1000)
         })
     }
 
@@ -124,7 +132,7 @@ namespace ESP8266Smarteo {
      */
     //% block
     export function closeTCPConnection() {
-        sendAT("AT+CIPCLOSE")
+        sendAT("AT+CIPCLOSE", 1000)
     }
 
     /**
@@ -137,6 +145,7 @@ namespace ESP8266Smarteo {
             if(response3) {
                 handleCommand(response3)
             }
+            basic.pause(100)
         }
     }
 }
