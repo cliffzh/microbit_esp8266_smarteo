@@ -15,22 +15,12 @@ namespace ESP8266Smarteo {
         }
     }
 
-    function sendSerialString(atCommands : string) {
-        let atCommandsLength = atCommands.length
-        sendAT("AT+CIPSEND=" + atCommandsLength, 1000)
-        if (serial.readString().includes(">")) {
-            sendAT(atCommands, 1000)
-        }
-
-    }
-
     function resetESP() {
         sendAT("AT+RESTORE", 1000) // restore to factory settings
         sendAT("AT+RST", 1000) // reset the module
         do {
             sendAT("AT", 500) // test command
             let response = serial.readString()
-            sendSerialString(response)
             if (response.includes("OK")) {
                 basic.showIcon(IconNames.Yes)
                 basic.pause(2000)
@@ -57,7 +47,6 @@ namespace ESP8266Smarteo {
             do {
                 sendAT("AT", 500)
                 let test = serial.readString()
-                sendSerialString(test)
                 if (test.includes("OK")) {
                     basic.showIcon(IconNames.Duck)
                     basic.pause(2000)
@@ -82,13 +71,11 @@ namespace ESP8266Smarteo {
     export function connectToWifi(ssid : string, password : string, ip_address : string) {
         sendAT("AT+CWJAP=\"" + ssid + "\",\"" + password + "\"", 0)
         let response2 = serial.readString()
-        sendSerialString(response2)
         if (response2.includes("OK")) {
             basic.showIcon(IconNames.Happy)
             basic.pause(3000)
             sendAT("AT+CIPSTA=\"" + ip_address + "\"", 0)
             let responseip = serial.readString()
-            sendSerialString(responseip)
             if (responseip.includes("OK")) {
                 basic.showIcon(IconNames.Surprised)
                 basic.pause(2000)
@@ -112,7 +99,6 @@ namespace ESP8266Smarteo {
     export function connectTCPServer (serverIP : string, port : string) {
         sendAT("AT+CIPSTART=\"TCP\",\"" + serverIP + "\"," + port, 5000);
         let connectResponse = serial.readString()
-        sendSerialString(connectResponse)
         if (connectResponse.includes("OK")) {
             basic.showIcon(IconNames.Heart)
 
@@ -161,7 +147,6 @@ namespace ESP8266Smarteo {
     export function listenMatrix() {
         while (true) {
             let response3 = serial.readString()
-            sendSerialString(response3)
             if(response3) {
                 handleCommand(response3)
             }
