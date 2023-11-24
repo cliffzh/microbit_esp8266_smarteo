@@ -104,14 +104,9 @@ namespace ESP8266Smarteo {
         let connectResponse = serial.readString()
         if (connectResponse.includes("OK")) {
             basic.showIcon(IconNames.Heart)
-
             let identificationMessage = "IDENTIFY: Microbit"
-            let messageLength = identificationMessage.length
-
-            sendAT("AT+CIPSEND=" + messageLength, 1000)
-            if (serial.readString().includes(">")) {
-                sendAT(identificationMessage)
-            }
+            sendAT("AT+CIPSEND=" + identificationMessage.length)
+            sendAT(identificationMessage)
         }
         else if (connectResponse.includes("ERROR")) {
             basic.showIcon(IconNames.Sad)
@@ -127,11 +122,8 @@ namespace ESP8266Smarteo {
     //% button.defl='Button.A'
     export function sendDataOnButtonPress (data : string, button : Button) {
         input.onButtonPressed(button, function() {
-            let datalength = data.length
-            sendAT("AT+CIPSEND=" + datalength, 2000)
-            if (serial.readString().includes(">")) {
-                sendAT(data, 1000)
-            }
+            sendAT("AT+CIPSEND=" + data.length)
+            sendAT(data, 1000)
         })
     }
 
