@@ -110,7 +110,7 @@ namespace ESP8266Smarteo {
                 sendAT(identificationMessage, 1000)
             }
         }
-        else {
+        else if (connectResponse.includes("ERROR")) {
             basic.showIcon(IconNames.Sad)
             return
         }
