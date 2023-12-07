@@ -160,7 +160,7 @@ namespace ESP8266Smarteo {
 
         let data = 'ACCEL:${accX}, ${accY}, ${accZ}'
         let fullmessage = data + "\n"
-        sendAT("AT+CIPSEND" + fullmessage.length)
+        sendAT("AT+CIPSEND=" + fullmessage.length)
         sendAT(fullmessage)
     }
 }
