@@ -158,7 +158,7 @@ namespace ESP8266Smarteo {
         let accY = input.acceleration(Dimension.Y)
         let accZ = input.acceleration(Dimension.Z)
 
-        let data = `ACCEL:${accX}`
+        let data = `ACCEL:${accX},${accY},${accZ}`
         let fullmessage = data + "\n"
 
         sendAT("AT+CIPSEND=" + fullmessage.length)
