@@ -164,4 +164,34 @@ namespace ESP8266Smarteo {
         sendAT("AT+CIPSEND=" + fullmessage.length)
         sendAT(fullmessage)
     }
+
+    /**
+     * Send temperature Data
+     */
+    //% block
+    export function sendTemperatureData() {
+        let temp = input.temperature() + "\n"
+        sendAT("AT+CIPSEND=" + temp.length)
+        sendAT(temp)
+    }
+
+    /**
+     * Send brightness data
+     */
+    //% block
+    export function sendBrightnessData() {
+        let bright = input.lightLevel() + "\n"
+        sendAT("AT+CIPSEND=" + bright.length)
+        sendAT(bright)
+    }
+
+    /**
+     * Send Compass Data
+     */
+    //% block
+    export function sendCompassData() {
+        let compassData = input.compassHeading() + "\n"
+        sendAT("AT+CIPSEND=" + compassData.length)
+        sendAT(compassData)
+    } 
 }
