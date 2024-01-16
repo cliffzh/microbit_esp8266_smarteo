@@ -15,6 +15,7 @@ namespace ESP8266Smarteo {
         }
         else if (commands.includes("fermer")) {
             sendAT("AT+CIPCLOSE", 1000)
+            basic.showIcon(IconNames.Umbrella)
         }
     }
 
