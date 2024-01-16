@@ -1,5 +1,7 @@
 namespace ESP8266Smarteo {
     
+    let serverIP: string=""
+    let serverPort: string=""
     function sendAT(command : string, wait : number = 0) {
         serial.writeString(command + "\u000D\u000A")
         basic.pause(wait)
@@ -16,6 +18,7 @@ namespace ESP8266Smarteo {
         else if (commands.includes("fermer")) {
             sendAT("AT+CIPCLOSE", 1000)
             basic.showIcon(IconNames.Umbrella)
+            connectTCPServer(serverIP, port)
         }
     }
 
@@ -100,7 +103,9 @@ namespace ESP8266Smarteo {
     //% block='Connect tcp serveur %serverIP and port %port'
     //% serverIP.defl='127.0.0.1'
     //% port.defl='8080'
-    export function connectTCPServer (serverIP : string, port : string) {
+    export function connectTCPServer (ip : string, port : string) {
+        serverIP = ip
+        serverPort = port
         sendAT("AT+CIPSTART=\"TCP\",\"" + serverIP + "\"," + port, 5000);
         let connectResponse = serial.readString()
         if (connectResponse.includes("OK")) {
