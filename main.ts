@@ -1,13 +1,13 @@
 namespace ESP8266Smarteo {
-    
-    let serverIP: string=""
-    let serverPort: string=""
-    function sendAT(command : string, wait : number = 0) {
+
+    let serverIP: string = ""
+    let serverPort: string = ""
+    function sendAT(command: string, wait: number = 0) {
         serial.writeString(command + "\u000D\u000A")
         basic.pause(wait)
     }
 
-    function handleCommand(commands : string) {
+    function handleCommand(commands: string) {
         if (commands.includes("allumer_led")) {
             basic.clearScreen()
             basic.showIcon(IconNames.Square)
@@ -39,7 +39,7 @@ namespace ESP8266Smarteo {
         } while (true) // Boucle infinie jusqu'à ce que la condition soit remplie
         sendAT("AT+CWMODE=1") // set to station mode
     }
-    
+
     /**
      * Initialize ESP8266 module
      */
@@ -47,26 +47,26 @@ namespace ESP8266Smarteo {
     //% tx.defl='SerialPin.P14'
     //% rx.defl='SerialPin.P0'
     //% baudrate.defl='baudrate.BaudRate115200'
-    export function initesp8266(tx : SerialPin, rx : SerialPin, baudrate : BaudRate) {
-            serial.redirect(tx, rx, BaudRate.BaudRate115200)
-            serial.setTxBufferSize(128)
-            serial.setRxBufferSize(128)
-            do {
-                sendAT("AT", 500)
-                let test = serial.readString()
-                if (test.includes("OK")) {
-                    basic.showIcon(IconNames.Duck)
-                    basic.pause(2000)
-                    break
-                }
-                else {
-                    basic.showIcon(IconNames.Snake)
-                    basic.pause(2000)
-                }
-            } while (true)
-            resetESP()
+    export function initesp8266(tx: SerialPin, rx: SerialPin, baudrate: BaudRate) {
+        serial.redirect(tx, rx, BaudRate.BaudRate115200)
+        serial.setTxBufferSize(128)
+        serial.setRxBufferSize(128)
+        do {
+            sendAT("AT", 500)
+            let test = serial.readString()
+            if (test.includes("OK")) {
+                basic.showIcon(IconNames.Duck)
+                basic.pause(2000)
+                break
+            }
+            else {
+                basic.showIcon(IconNames.Snake)
+                basic.pause(2000)
+            }
+        } while (true)
+        resetESP()
     }
-    
+
 
     /**
      * Connect to Wifi router
@@ -75,7 +75,7 @@ namespace ESP8266Smarteo {
     //% ssid.defl='Smarteo'
     //% password.defl='%Smarteo123'
     //% ip_address.defl='192.168.1.30'
-    export function connectToWifi(ssid : string, password : string, ip_address : string) {
+    export function connectToWifi(ssid: string, password: string, ip_address: string) {
         sendAT("AT+CWJAP=\"" + ssid + "\",\"" + password + "\"", 0)
         let response2 = serial.readString()
         if (response2.includes("OK")) {
@@ -86,7 +86,7 @@ namespace ESP8266Smarteo {
             if (responseip.includes("OK")) {
                 basic.showIcon(IconNames.Surprised)
                 basic.pause(2000)
-            } 
+            }
             else {
                 basic.showIcon(IconNames.Silly)
                 basic.pause(2000)
@@ -103,14 +103,14 @@ namespace ESP8266Smarteo {
     //% block='Connect tcp serveur %serverIP and port %port'
     //% serverIP.defl='127.0.0.1'
     //% port.defl='8080'
-    export function connectTCPServer (ip : string, port : string) {
+    export function connectTCPServer(ip: string, port: string) {
         serverIP = ip
         serverPort = port
         sendAT("AT+CIPSTART=\"TCP\",\"" + serverIP + "\"," + port, 5000);
         let connectResponse = serial.readString()
         if (connectResponse.includes("OK")) {
             basic.showIcon(IconNames.Heart)
-            let identificationMessage = "IDENTIFY: Microbit"
+            let identificationMessage = "IDENTIFY: Microbit\n"
             sendAT("AT+CIPSEND=" + identificationMessage.length)
             sendAT(identificationMessage)
         }
@@ -126,8 +126,8 @@ namespace ESP8266Smarteo {
     //% block='Send data %data on button %button'
     //% data.defl='Hello, World !'
     //% button.defl='Button.A'
-    export function sendDataOnButtonPress (data : string, button : Button) {
-        input.onButtonPressed(button, function() {
+    export function sendDataOnButtonPress(data: string, button: Button) {
+        input.onButtonPressed(button, function () {
             let fullmessage = data + "\n"
             sendAT("AT+CIPSEND=" + fullmessage.length)
             sendAT(fullmessage)
@@ -146,10 +146,10 @@ namespace ESP8266Smarteo {
      * Listen for commands 
      */
     //% block
-    export function listenMatrix() {
+    export function listenCommands() {
         while (true) {
             let response3 = serial.readString()
-            if(response3) {
+            if (response3) {
                 handleCommand(response3)
             }
             basic.pause(100)
@@ -196,5 +196,5 @@ namespace ESP8266Smarteo {
         let compassData = `COMPASS:${input.compassHeading()}\n`
         sendAT("AT+CIPSEND=" + compassData.length)
         sendAT(compassData)
-    } 
+    }
 }
