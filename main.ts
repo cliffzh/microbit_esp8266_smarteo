@@ -164,8 +164,8 @@ namespace ESP8266Smarteo {
         let accY = input.acceleration(Dimension.Y)
         let accZ = input.acceleration(Dimension.Z)
         let accData = `ACCEL:${accX},${accY},${accZ}\n`
-        sendAT("AT+CIPSEND=" + accData.length, 500)
-        sendAT(accData, 500)
+        sendAT("AT+CIPSEND=" + accData.length, 100)
+        sendAT(accData)
     }
 
     /**
@@ -174,8 +174,8 @@ namespace ESP8266Smarteo {
     //% block
     export function sendTemperatureData() {
         let tempData = `TEMP:${input.temperature()}\n`
-        sendAT("AT+CIPSEND=" + tempData.length, 500)
-        sendAT(tempData, 500)
+        sendAT("AT+CIPSEND=" + tempData.length, 100)
+        sendAT(tempData)
     }
 
     /**
@@ -184,8 +184,8 @@ namespace ESP8266Smarteo {
     //% block
     export function sendBrightnessData() {
         let brightData = `LIGHT:${input.lightLevel()}\n`
-        sendAT("AT+CIPSEND=" + brightData.length, 500)
-        sendAT(brightData, 500)
+        sendAT("AT+CIPSEND=" + brightData.length, 100)
+        sendAT(brightData)
     }
 
     /**
@@ -194,7 +194,7 @@ namespace ESP8266Smarteo {
     //% block
     export function sendCompassData() {
         let compassData = `COMPASS:${input.compassHeading()}\n`
-        sendAT("AT+CIPSEND=" + compassData.length, 500)
-        sendAT(compassData, 500)
+        sendAT("AT+CIPSEND=" + compassData.length, 100)
+        sendAT(compassData)
     }
 }
