@@ -197,4 +197,34 @@ namespace ESP8266Smarteo {
         sendAT("AT+CIPSEND=" + compassData.length, 100)
         sendAT(compassData)
     }
+
+    export function controlRobot() {
+        control.inBackground(function() {
+            while(true) {
+                let x = input.acceleration(Dimension.X)
+                let y = input.acceleration(Dimension.Y)
+
+                let angle = Math.round(Math.atan2(y, x) * (180/ Math.PI))
+                let needle = (angle + 90 + 15)
+                let direction = Math.floor(needle/30)
+
+                if (Math.abs(y) > 80) {
+                    basic.showIcon(IconNames.SmallDiamond)
+                }
+                else {
+                    basic.showIcon(IconNames.Diamond)
+                }
+
+                let dictionary = {
+                    x: x,
+                    y: y,
+                    direction: direction
+                }
+
+                let packet = JSON.stringify(dictionary)
+                sendAT("AT+CIPSEND=" + packet.length, 100)
+                sendAT(packet, 50)
+            }
+        })
+    }
 }
