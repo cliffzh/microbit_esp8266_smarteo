@@ -22,6 +22,20 @@ namespace ESP8266Smarteo {
         }
     }
 
+    function calculMath() {
+        let x = input.acceleration(Dimension.X)
+        let y = input.acceleration(Dimension.Y)
+        let angle = Math.round(Math.atan2(y, x) * (180 / Math.PI))
+        let needle = (angle + 90 + 15)
+        let direction = Math.floor(needle / 30)
+
+        return{
+            x: x,
+            y: y,
+            direction: direction
+        }
+    }
+
     function resetESP() {
         sendAT("AT+RESTORE", 1000) // restore to factory settings
         sendAT("AT+RST", 1000) // reset the module
@@ -111,8 +125,8 @@ namespace ESP8266Smarteo {
         if (connectResponse.includes("OK")) {
             basic.showIcon(IconNames.Heart)
             let identificationMessage = "IDENTIFY: Microbit\n"
-            sendAT("AT+CIPSEND=" + identificationMessage.length)
-            sendAT(identificationMessage)
+            sendAT("AT+CIPSEND=" + identificationMessage.length, 100)
+            sendAT(identificationMessage, 100)
         }
         else if (connectResponse.includes("ERROR")) {
             basic.showIcon(IconNames.Sad)
@@ -129,7 +143,7 @@ namespace ESP8266Smarteo {
     export function sendDataOnButtonPress(data: string, button: Button) {
         input.onButtonPressed(button, function () {
             let fullmessage = data + "\n"
-            sendAT("AT+CIPSEND=" + fullmessage.length)
+            sendAT("AT+CIPSEND=" + fullmessage.length, 100)
             sendAT(fullmessage)
         })
     }
@@ -198,33 +212,14 @@ namespace ESP8266Smarteo {
         sendAT(compassData)
     }
 
+    /**
+     *  Control a robot
+     */
+    //% block
     export function controlRobot() {
-        control.inBackground(function() {
-            while(true) {
-                let x = input.acceleration(Dimension.X)
-                let y = input.acceleration(Dimension.Y)
-
-                let angle = Math.round(Math.atan2(y, x) * (180/ Math.PI))
-                let needle = (angle + 90 + 15)
-                let direction = Math.floor(needle/30)
-
-                if (Math.abs(y) > 80) {
-                    basic.showIcon(IconNames.SmallDiamond)
-                }
-                else {
-                    basic.showIcon(IconNames.Diamond)
-                }
-
-                let dictionary = {
-                    x: x,
-                    y: y,
-                    direction: direction
-                }
-
-                let packet = JSON.stringify(dictionary)
-                sendAT("AT+CIPSEND=" + packet.length, 100)
-                sendAT(packet, 50)
-            }
-        })
+        let data = calculMath()
+        let packet = `CONTROL ROBOT: x:${data.x}, y:${data.y}, Direction:${data.direction}\n`
+        sendAT("AT+CIPSEND=" + packet.length, 100)
+        sendAT(packet)
     }
 }
